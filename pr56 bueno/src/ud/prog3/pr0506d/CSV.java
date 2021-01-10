@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
-/** Clase para proceso básico de ficheros csv
+/** Clase para proceso bÃ¡sico de ficheros csv
  * @author andoni.eguiluz @ ingenieria.deusto.es
  */
 public class CSV { 
@@ -30,9 +30,9 @@ public class CSV {
 	 */
 	public static void processCSV( URL url ) 
 	throws MalformedURLException,  // URL incorrecta 
-	 IOException, // Error al abrir conexión
+	 IOException, // Error al abrir conexiÃ³n
 	 UnknownHostException, // servidor web no existente
-	 FileNotFoundException, // En algunos servidores, acceso a p�gina inexistente
+	 FileNotFoundException, // En algunos servidores, acceso a pï¿½gina inexistente
 	 ConnectException // Error de timeout
 	{
 		BufferedReader input = null;
@@ -41,7 +41,7 @@ public class CSV {
 		    URLConnection connection = url.openConnection();
 		    connection.setDoInput(true);
 		    inStream = connection.getInputStream();
-		    input = new BufferedReader(new InputStreamReader( inStream, "UTF-8" ));  // Supone utf-8 en la codificación de texto
+		    input = new BufferedReader(new InputStreamReader( inStream, "UTF-8" ));  // Supone utf-8 en la codificaciÃ³n de texto
 		    String line = "";
 		    int numLine = 0;
 		    while ((line = input.readLine()) != null) {
@@ -69,26 +69,26 @@ public class CSV {
 		}
 	}
 	
-		/** Procesa una línea de entrada de csv	
+		/** Procesa una lÃ­nea de entrada de csv	
 		 * @param input	Stream de entrada ya abierto
-		 * @param line	La línea YA LEÍDA desde input
-		 * @param numLine	Número de línea ya leída
-		 * @return	Lista de objetos procesados en el csv. Si hay algún string sin acabar en la línea actual, lee más líneas del input hasta que se acaben los strings o el input
+		 * @param line	La lÃ­nea YA LEÃ�DA desde input
+		 * @param numLine	NÃºmero de lÃ­nea ya leÃ­da
+		 * @return	Lista de objetos procesados en el csv. Si hay algÃºn string sin acabar en la lÃ­nea actual, lee mÃ¡s lÃ­neas del input hasta que se acaben los strings o el input
 		 * @throws StringIndexOutOfBoundsException
 		 */
 		public static ArrayList<Object> processCSVLine( BufferedReader input, String line, int numLine ) throws StringIndexOutOfBoundsException {
 			ArrayList<Object> ret = new ArrayList<>();
 			ArrayList<Object> lista = null; // Para posibles listas internas
 			int posCar = 0;
-			boolean inString = false; // Marca de cuando se está leyendo un string
-			boolean lastString = false;  // Marca que el último leído era un string
-			boolean inList = false; // Marca de cuando se está leyendo una lista (entre corchetes, separada por comas)
+			boolean inString = false; // Marca de cuando se estÃ¡ leyendo un string
+			boolean lastString = false;  // Marca que el Ãºltimo leÃ­do era un string
+			boolean inList = false; // Marca de cuando se estÃ¡ leyendo una lista (entre corchetes, separada por comas)
 			boolean finString = false;
 			String stringActual = "";
 			char separador = 0;
 			while (line!=null && (posCar<line.length() || line.isEmpty() && posCar==0)) {
 				if (line.isEmpty() && posCar==0) {
-					if (!inString) return ret;  // Línea vacía
+					if (!inString) return ret;  // LÃ­nea vacÃ­a
 				} else {
 					char car = line.charAt( posCar );
 					if (car=='"') {
@@ -104,7 +104,7 @@ public class CSV {
 						} else {  // !inString
 							if (stringActual.isEmpty()) {  // " de apertura
 								inString = true;
-							} else {  // " después de valor - error
+							} else {  // " despuÃ©s de valor - error
 								throw new StringIndexOutOfBoundsException( "\" after data in char " + posCar + " of line [" + line + "]" );
 							}
 						}
@@ -114,7 +114,7 @@ public class CSV {
 						if (inString) {  // separador dentro de string
 							stringActual += car;
 						} else {  // separador que separa valores
-							if (separador==0) { // Si no se había encontrado separador hasta ahora
+							if (separador==0) { // Si no se habÃ­a encontrado separador hasta ahora
 								separador = car;
 								if (inList)
 									lista.add( getDato( stringActual, lastString ) );
@@ -126,7 +126,7 @@ public class CSV {
 								stringActual = "";
 								lastString = false;
 								finString = false;
-							} else { // Si se había encontrado, solo vale el mismo (, o ;)
+							} else { // Si se habÃ­a encontrado, solo vale el mismo (, o ;)
 								if (separador==car) {  // Es un separador
 									if (inList)
 										lista.add( getDato( stringActual, lastString ) );
@@ -138,8 +138,8 @@ public class CSV {
 									stringActual = "";
 									lastString = false;
 									finString = false;
-								} else {  // Es un carácter normal
-									if (finString) throw new StringIndexOutOfBoundsException( "Data after string in char " + posCar + " of line [" + line + "]");  // valor después de string - error
+								} else {  // Es un carÃ¡cter normal
+									if (finString) throw new StringIndexOutOfBoundsException( "Data after string in char " + posCar + " of line [" + line + "]");  // valor despuÃ©s de string - error
 									stringActual += car;
 								}
 							}
@@ -153,20 +153,20 @@ public class CSV {
 						if (!stringActual.isEmpty()) lista.add( getDato( stringActual, lastString ) );
 						stringActual = "";
 						inList = false;
-					} else {  // Carácter dentro de valor
-						if (finString) throw new StringIndexOutOfBoundsException( "Data after string in char " + posCar + " of line [" + line + "]");  // valor después de string - error
+					} else {  // CarÃ¡cter dentro de valor
+						if (finString) throw new StringIndexOutOfBoundsException( "Data after string in char " + posCar + " of line [" + line + "]");  // valor despuÃ©s de string - error
 						stringActual += car;
 					}
 					posCar++;
 				}
-				if (posCar>=line.length() && inString) {  // Se ha acabado la línea sin acabarse el string. Eso es porque algún string incluye salto de línea. Se sigue con la siguiente línea
+				if (posCar>=line.length() && inString) {  // Se ha acabado la lÃ­nea sin acabarse el string. Eso es porque algÃºn string incluye salto de lÃ­nea. Se sigue con la siguiente lÃ­nea
 					line = null;
 				    try {
 						line = input.readLine();
 				    	if (LOG_CONSOLE_CSV) System.out.println( "  " + numLine + " (add)\t" + line );
 						posCar = 0;
 						stringActual += "\n";
-					} catch (IOException e) {}  // Si la línea es null es que el fichero se ha acabado ya o hay un error de I/O
+					} catch (IOException e) {}  // Si la lÃ­nea es null es que el fichero se ha acabado ya o hay un error de I/O
 				}
 			}
 			if (inString) throw new StringIndexOutOfBoundsException( "String not closed in line " + numLine + ": [" + line + "]");
@@ -177,13 +177,13 @@ public class CSV {
 			return ret;
 		}
 
-			// Devuelve el siguiente carácter (car 0 si no existe el siguiente carácter)
+			// Devuelve el siguiente carÃ¡cter (car 0 si no existe el siguiente carÃ¡cter)
 			private static char nextCar( String line, int posCar ) {
 				if (posCar+1<line.length()) return line.charAt( posCar + 1 );
 				else return Character.MIN_VALUE;
 			}
 			
-			// Devuelve el objeto que corresponde a un dato (por defecto String. Si es entero o doble válido, se devuelve ese tipo)
+			// Devuelve el objeto que corresponde a un dato (por defecto String. Si es entero o doble vÃ¡lido, se devuelve ese tipo)
 			private static Object getDato( String valor, boolean esString ) {
 				if (esString) return valor;
 				try {
@@ -200,7 +200,7 @@ public class CSV {
 	
 	private static void procesaCabeceras( ArrayList<Object> cabs ) {
 		// TODO Cambiar este proceso si se quiere hacer algo con las cabeceras
-		System.err.println( cabs );  // Saca la cabecera por consola de error
+		GestionTwitter.v.taTexto.setText( cabs.toString() );  // Saca la cabecera por consola de error
 	}
 
 	private static int numLin = 0;
@@ -221,16 +221,17 @@ public class CSV {
 			u.setFriends((ArrayList<String>)datos.get(9));
 			if (!GestionTwitter.usuarioID.containsKey(u.getId())) {
 				GestionTwitter.usuarioID.put(u.getId(), u);
+				System.out.println("Exito " + numLin);
 			}else {
-				System.err.println("Error Usuario duplicado");
+				GestionTwitter.v.taTexto.setText("\nError Usuario duplicado");
 			}
 			//GestionTwitter.usuarioNom.put(u.getScreenName(), u); tambien se puede hacer aqui la carga del 2 mapa
-			
+			GestionTwitter.v.pbProgreso.setValue(numLin);
 		}else {
 			System.out.println(datos.size());
 			System.out.println(datos.get(0));
 		}
-		//System.out.println( numLin + "\t" + datos );  // Saca la cabecera por consola de error
+		
 	}
 
 }
