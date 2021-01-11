@@ -3,6 +3,7 @@ package ud.prog3.pr0506d;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.TextArea;
 import java.awt.event.WindowEvent;
@@ -54,6 +55,7 @@ public class VentanaGeneral extends JFrame{
 	String texto;
 	public VentanaGeneral() {
 		
+		JPanel pCompleto= new JPanel();
 		
 		taTexto= new TextArea();
 		cargaDatos();
@@ -140,12 +142,14 @@ public class VentanaGeneral extends JFrame{
 		pSupI.add(pSupIa,BorderLayout.CENTER);
 		pSuperior.add(pSupI,BorderLayout.SOUTH);
 		
+		
 		getContentPane().add(pSuperior,BorderLayout.NORTH);
 		getContentPane().add(pInferior,BorderLayout.SOUTH);
 		getContentPane().add(pCentral,BorderLayout.CENTER);
 		pCentral.removeAll();
 		pCentral.add(taTexto);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		setVisible(true);
 		pack();
 		
